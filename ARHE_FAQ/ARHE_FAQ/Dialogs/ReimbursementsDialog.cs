@@ -19,7 +19,11 @@ namespace ARHE_FAQ.Dialogs
         {
             var activity = await result as IMessageActivity;
 
-            // TODO: Put logic for handling user message here
+            // TODO: Get Reimubursement FAQ
+            //Create Choice Prompt and display FAQ Data and question to continue?
+            //Create method to handle the question (yes or no)
+            //if yes....then conext.done - which will go back to root dialog
+            // if now ... then prompt user "we are sorry it has been noted" context.done
 
             context.Wait(MessageReceivedAsync);
         }
