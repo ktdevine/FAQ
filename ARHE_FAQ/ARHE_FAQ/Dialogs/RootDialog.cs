@@ -50,7 +50,9 @@ namespace ARHE_FAQ.Dialogs
 
         private async Task ResumeAndPromptDecisionAsync(IDialogContext context, IAwaitable<FAQTypes> result)
         {
-            faqtype = await result;
+            var message = await result;
+
+            faqtype = message;
 
             //We have the FAQ Type - need to determine if they are a customer or not.
             switch (faqtype.ToString())
