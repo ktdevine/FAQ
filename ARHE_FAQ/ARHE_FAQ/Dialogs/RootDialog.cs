@@ -67,10 +67,10 @@ namespace ARHE_FAQ.Dialogs
                     context.Call(new ClaimsDialog(), BackFromDialogPrompt);
                     break;
                 case "Reimbursements":
-                    context.Call(new ReimbursementsDialog(), BackFromDialogPrompt);
+                    //context.Call(new ReimbursementsDialog(), BackFromDialogPrompt);
                     break;
                 case "Appointments":
-                    context.Call(new AppointmentsDialog(), BackFromDialogPrompt);
+                    //context.Call(new AppointmentsDialog(), BackFromDialogPrompt);
                     break;
                 default:
                     break;
@@ -85,7 +85,7 @@ namespace ARHE_FAQ.Dialogs
 
             if ((bool)isMoreHelpNeeded)
             {
-                context.Wait(InitialPromptMessageAsync);
+                await RestartPromptFAQAsync(context);
             }
             else
             {
@@ -93,7 +93,18 @@ namespace ARHE_FAQ.Dialogs
             }
             
         }
-        
-        
+
+        private async Task RestartPromptFAQAsync(IDialogContext context)
+        {
+            PromptDialog.Choice(
+                context: context,
+                resume: ResumeAndPromptDecisionAsync,
+                options: new List<string>() { FAQStatus, FAQClaims, FAQAppointments, FAQReimbursements },
+                prompt: "Which of these areas do you need help with today?",
+                retry: "I didn't understand. Please try again."
+                );
+        }
+
+
     }
 }
