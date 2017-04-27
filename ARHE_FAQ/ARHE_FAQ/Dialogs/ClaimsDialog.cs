@@ -28,9 +28,22 @@ namespace ARHE_FAQ.Dialogs
 
         private async Task ResumeAndPromptCustomerAsync(IDialogContext context, IAwaitable<bool> result)
         {
-            bool isCurrentCustomer = await result;          
+            bool isCurrentCustomer = await result;            
+            //context.Done(GetCustomerClaimInfo(isCurrentCustomer));
+
+            PromptDialog.Confirm(
+               context: context,
+               resume: ResumeOrEndPromptAsync,
+               prompt: "Here is what I found " + GetCustomerClaimInfo(isCurrentCustomer) + " Is there anything else I can help you with today",
+               retry: "I didn't understand. Please try again.");
+        }
+
+        private async Task ResumeOrEndPromptAsync(IDialogContext context, IAwaitable<bool> result)
+        {
+            bool isMoreHelpNeeded = await result;
+
+            context.Done(isMoreHelpNeeded);
            
-            context.Done(GetCustomerClaimInfo(isCurrentCustomer));
         }
 
         public string GetCustomerClaimInfo(bool isCurrentCustomer)
