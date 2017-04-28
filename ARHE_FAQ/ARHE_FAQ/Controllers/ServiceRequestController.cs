@@ -38,5 +38,34 @@ namespace ARHE_FAQ.Controllers
 
             return premiumAmount;
         }
+        [HttpPost]
+        public string GetAppointmentInformation(string requestString)
+        {
+            var path = System.Web.HttpContext.Current.Server.MapPath(@"~\\Data\\AppointmentDetail.json");
+            string json = File.ReadAllText(path);
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            AppointmentModel[] responses = js.Deserialize<AppointmentModel[]>(json);
+
+            var response = responses.FirstOrDefault(x => x.CustomerId == requestString);
+            string appointmentInformation = string.Empty;
+
+            if (response != null)
+            {
+                appointmentInformation = string.Format("You currently have a {0} appointment scheduled for {1} with {2}. {3}{3}", 
+                    response.Subject,
+                    response.AppointmentStartTime.ToString("f", CultureInfo.CurrentCulture),
+                    response.AgentName,
+                    Environment.NewLine);
+
+                appointmentInformation = appointmentInformation + (
+                    response.IsConfirmed ? string.Format("Your Appointment was confirmed on {0}", response.AppointmentConfirmationDate.ToString("d", CultureInfo.CurrentCulture)) : string.Format("Your appointment has not been confirmed yet.  Would you like to confirm?"));
+            }
+            else
+            {
+                appointmentInformation = string.Format("You currently do not have a scheduled appointment, Please call our service center to schedule one today");
+            }
+
+            return appointmentInformation;
+        }
     }
 }

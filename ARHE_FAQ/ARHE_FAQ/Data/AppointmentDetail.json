@@ -1,0 +1,74 @@
+﻿[
+  {
+    "CustomerId": "1",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Enrollment",
+    "AgentName": "Eric Thames",
+    "IsConfirmed": "false",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "1",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Enrollment",
+    "AgentName": "Manny Pina",
+    "IsConfirmed": "false",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "3",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Needs Assessment",
+    "AgentName": "Ryan Braun",
+    "IsConfirmed": "true",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "4",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Needs Assessment",
+    "AgentName": "Jett Bandy",
+    "IsConfirmed": "true",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "5",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Enrollment Call",
+    "AgentName": "Orlando Arcia",
+    "IsConfirmed": "false",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "6",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Enrollment Call",
+    "AgentName": "Jonathon Villar",
+    "IsConfirmed": "false",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "7",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Needs Assessment",
+    "AgentName": "Keon Broxton",
+    "IsConfirmed": "false",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "8",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Needs Assessment",
+    "AgentName": "Travis Shaw",
+    "IsConfirmed": "false",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  },
+  {
+    "CustomerId": "9",
+    "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
+    "Subject": "Enrollment Call",
+    "AgentName": "Junior Guerra",
+    "IsConfirmed": "true",
+    "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
+  }
+]
