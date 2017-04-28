@@ -5,6 +5,7 @@ using System.Web;
 
 namespace ARHE_FAQ.Model
 {
+    [Serializable]
     public class AppointmentModel
     {
         public string CustomerId { get; set; }

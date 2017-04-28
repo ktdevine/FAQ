@@ -114,6 +114,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ServiceRequestController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Dialogs\AppointmentConfirmationDialog.cs" />
     <Compile Include="Dialogs\AppointmentsDialog.cs" />
     <Compile Include="Dialogs\ClaimsDialog.cs" />
     <Compile Include="Dialogs\ReimbursementsDialog.cs" />

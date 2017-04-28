@@ -8,7 +8,7 @@
     "AppointmentConfirmationDate": "2017-05-01T18:00:00.000Z"
   },
   {
-    "CustomerId": "1",
+    "CustomerId": "2",
     "AppointmentStartTime": "2017-05-01T18:00:00.000Z",
     "Subject": "Enrollment",
     "AgentName": "Manny Pina",
