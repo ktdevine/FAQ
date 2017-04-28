@@ -83,10 +83,10 @@ namespace ARHE_FAQ.Dialogs
                     context.Call(new ClaimsDialog(), BackFromDialogPrompt);
                     break;
                 case "Reimbursements":
-                    //context.Call(new ReimbursementsDialog(), BackFromDialogPrompt);
+                   context.Call(new ReimbursementsDialog(), BackFromDialogPrompt);
                     break;
                 case "Appointments":
-                    //context.Call(new AppointmentsDialog(), BackFromDialogPrompt);
+                    context.Call(new AppointmentsDialog(), BackFromDialogPrompt);
                     break;
                 default:
                     break;
