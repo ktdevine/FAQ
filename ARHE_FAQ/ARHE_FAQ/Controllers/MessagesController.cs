@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
+using System.Linq;
 
 namespace ARHE_FAQ
 {
@@ -14,19 +15,42 @@ namespace ARHE_FAQ
         /// POST: api/Messages
         /// Receive a message from a user and reply to it
         /// </summary>
+        /// Standard code to have client initiate call
+        //public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
+        //{
+        //    if (activity.Type == ActivityTypes.Message)
+        //    {
+        //        await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+        //    }
+        //    else
+        //    {
+        //        HandleSystemMessage(activity);
+        //    }
+        //    var response = Request.CreateResponse(HttpStatusCode.OK);
+        //    return response;
+        //}
+        // Updated Post to handle connection from client to initiate premptive call
         public async Task<HttpResponseMessage> Post([FromBody]Activity activity)
         {
-            if (activity.Type == ActivityTypes.Message)
+            if (activity != null)
             {
+                if (activity.GetActivityType() == ActivityTypes.ConversationUpdate)
+                {
+                    IConversationUpdateActivity update = activity;
+                    //remove bot from the members added
+                    update.MembersAdded = update.MembersAdded.Where(member => member.Id != update.Recipient.Id).ToList();
+
+                    if (update.MembersAdded.Count == 0)
+                    {
+                        return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
+                    }
+                }
                 await Conversation.SendAsync(activity, () => new Dialogs.RootDialog());
+
             }
-            else
-            {
-                HandleSystemMessage(activity);
-            }
-            var response = Request.CreateResponse(HttpStatusCode.OK);
-            return response;
+            return new HttpResponseMessage(System.Net.HttpStatusCode.Accepted);
         }
+
 
         private Activity HandleSystemMessage(Activity message)
         {

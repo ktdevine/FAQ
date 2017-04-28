@@ -19,23 +19,39 @@ namespace ARHE_FAQ.Dialogs
         private const string FAQReimbursements = "Reimbursements";
         private const string FAQClaims = "Claims";
 
-        public Task StartAsync(IDialogContext context)
+        public async Task StartAsync(IDialogContext context)
         {
             context.Wait(InitialPromptMessageAsync);
 
-            return Task.CompletedTask;
         }
 
-        private async Task InitialPromptMessageAsync(IDialogContext context, IAwaitable<object> result)
+        private async Task InitialPromptMessageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var activity = await result as Activity;
 
-            //Recived the initial text from the user. What do we want to do?
-            PromptDialog.Text(
-                context: context,
-                resume: ResumeAndPromptFAQAsync,
-                prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
-                retry: "I didn't understand. Please try again.");
+            var activity = await result;
+            switch (activity.Type)
+            {
+                case ActivityTypes.ConversationUpdate:
+                    //This is called when the bot starts
+                    PromptDialog.Text(
+                        context: context,
+                        resume: ResumeAndPromptFAQAsync,
+                        prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
+                        retry: "I didn't understand. Please try again.");
+                
+                    break;
+                case ActivityTypes.Message:
+                    //All the messages come here.  In case the connection does not connect. 
+                    PromptDialog.Text(
+                       context: context,
+                       resume: ResumeAndPromptFAQAsync,
+                       prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
+                       retry: "I didn't understand. Please try again.");
+                    break;
+                default:
+                    context.Wait(InitialPromptMessageAsync);
+                    break;
+            }
             
         }
 
