@@ -29,23 +29,33 @@ namespace ARHE_FAQ.Dialogs
         {
 
             var activity = await result;
+
+            //Retrieving user name from userdata...this will return IF this is the users 2nd time
+            string u;
+            bool isUname = context.UserData.TryGetValue("username", out u);
+
             switch (activity.Type)
             {
+                
                 case ActivityTypes.ConversationUpdate:
+
+
+                    string prompt = isUname ? $"Hello {u}, welcome back. Ready to start?" : "Hello, I am the ARHE Bot.I am here to help. Can I have your name?";
+                        
                     //This is called when the bot starts
                     PromptDialog.Text(
                         context: context,
                         resume: ResumeAndPromptFAQAsync,
-                        prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
-                        retry: "I didn't understand. Please try again.");
-                
+                        prompt: prompt,
+                        retry: "I didn't understand. Please try again.");                
                     break;
                 case ActivityTypes.Message:
                     //All the messages come here.  In case the connection does not connect. 
+                    //Restarting dialogs                   
                     PromptDialog.Text(
                        context: context,
                        resume: ResumeAndPromptFAQAsync,
-                       prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
+                       prompt: $"Hello, looks like you are back {u}. Ready to start?",
                        retry: "I didn't understand. Please try again.");
                     break;
                 default:
@@ -58,7 +68,16 @@ namespace ARHE_FAQ.Dialogs
         private async Task ResumeAndPromptFAQAsync(IDialogContext context, IAwaitable<string> result)
         {
             name = await result;
-
+            //Handle if there is a username present ... otherwise ignore for now
+            string u;
+            if (!context.UserData.TryGetValue("username", out u))
+            {
+                context.UserData.SetValue("username", name);
+            } else
+            {
+                name = u;
+            }     
+            
             PromptDialog.Choice(
                 context: context,
                 resume: ResumeAndPromptDecisionAsync,
