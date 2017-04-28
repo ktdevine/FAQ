@@ -8,30 +8,32 @@ namespace ARHE_FAQ.Dialogs
     [Serializable]
     public class ClaimsDialog : IDialog<object>
     {
-        public Task StartAsync(IDialogContext context)
+        public async Task StartAsync(IDialogContext context)
         {
             PromptDialog.Confirm(
                context: context,
                resume: ResumeAndPromptCustomerAsync,
                prompt: "Ok. You asked about claims, are you a current customer?",
                retry: "I didn't understand. Please try again.");
-
-            //context.Wait(MessageReceivedAsync);
-
-            return Task.CompletedTask;
-        }
-
-        private async Task MessageReceivedAsync(IDialogContext context, IAwaitable<object> result)
-        {
-            var activity = await result as IMessageActivity;
-
         }
 
         private async Task ResumeAndPromptCustomerAsync(IDialogContext context, IAwaitable<bool> result)
         {
-            bool isCurrentCustomer = await result;          
+            bool isCurrentCustomer = await result;            
+            
+            PromptDialog.Confirm(
+               context: context,
+               resume: ResumeOrEndPromptAsync,
+               prompt: "Here is what I found " + GetCustomerClaimInfo(isCurrentCustomer) + " Is there anything else I can help you with today",
+               retry: "I didn't understand. Please try again.");
+        }
+
+        private async Task ResumeOrEndPromptAsync(IDialogContext context, IAwaitable<bool> result)
+        {
+            bool isMoreHelpNeeded = await result;
+
+            context.Done(isMoreHelpNeeded);
            
-            context.Done(GetCustomerClaimInfo(isCurrentCustomer));
         }
 
         public string GetCustomerClaimInfo(bool isCurrentCustomer)

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Connector;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace ARHE_FAQ.Dialogs
 {
@@ -11,26 +12,46 @@ namespace ARHE_FAQ.Dialogs
     {
         //Properties used in prompts
         public string name;
-        public FAQTypes faqtype;
         public bool IsCustomerRequired = false;
 
-        public Task StartAsync(IDialogContext context)
+        private const string FAQStatus = "Status";
+        private const string FAQAppointments = "Appointments";
+        private const string FAQReimbursements = "Reimbursements";
+        private const string FAQClaims = "Claims";
+
+        public async Task StartAsync(IDialogContext context)
         {
             context.Wait(InitialPromptMessageAsync);
 
-            return Task.CompletedTask;
         }
 
-        private async Task InitialPromptMessageAsync(IDialogContext context, IAwaitable<object> result)
+        private async Task InitialPromptMessageAsync(IDialogContext context, IAwaitable<IMessageActivity> result)
         {
-            var activity = await result as Activity;
 
-            //Recived the initial text from the user. What do we want to do?
-            PromptDialog.Text(
-                context: context,
-                resume: ResumeAndPromptFAQAsync,
-                prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
-                retry: "I didn't understand. Please try again.");
+            var activity = await result;
+            switch (activity.Type)
+            {
+                case ActivityTypes.ConversationUpdate:
+                    //This is called when the bot starts
+                    PromptDialog.Text(
+                        context: context,
+                        resume: ResumeAndPromptFAQAsync,
+                        prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
+                        retry: "I didn't understand. Please try again.");
+                
+                    break;
+                case ActivityTypes.Message:
+                    //All the messages come here.  In case the connection does not connect. 
+                    PromptDialog.Text(
+                       context: context,
+                       resume: ResumeAndPromptFAQAsync,
+                       prompt: "Hello, I am the ARHE Bot. I am here to help. Can I please have your name?",
+                       retry: "I didn't understand. Please try again.");
+                    break;
+                default:
+                    context.Wait(InitialPromptMessageAsync);
+                    break;
+            }
             
         }
 
@@ -41,33 +62,31 @@ namespace ARHE_FAQ.Dialogs
             PromptDialog.Choice(
                 context: context,
                 resume: ResumeAndPromptDecisionAsync,
-                options: Enum.GetValues(typeof(FAQTypes)).Cast<FAQTypes>().ToArray(),
+                options: new List<string>() { FAQStatus, FAQClaims, FAQAppointments, FAQReimbursements },
                 prompt: $"Thank you {name}. Which of these areas do you need help with today?",
-                retry: "I didn't understand. Please try again."
+                retry: "I didn't understand. Please try again."                
                 );
             
         }
 
-        private async Task ResumeAndPromptDecisionAsync(IDialogContext context, IAwaitable<FAQTypes> result)
+        private async Task ResumeAndPromptDecisionAsync(IDialogContext context, IAwaitable<string> result)
         {
             var message = await result;
-
-            faqtype = message;
-
+                       
             //We have the FAQ Type - need to determine if they are a customer or not.
-            switch (faqtype.ToString())
+            switch (message)
             {
                 case "Status":
-                    context.Call(new StatusDialog(), ResumeAfterOptionDialog);
+                    context.Call(new StatusDialog(), BackFromDialogPrompt);
                     break;
                 case "Claims":
-                    context.Call(new ClaimsDialog(), ResumeAfterOptionDialog);
+                    context.Call(new ClaimsDialog(), BackFromDialogPrompt);
                     break;
                 case "Reimbursements":
-                    context.Call(new ReimbursementsDialog(), ResumeAfterOptionDialog);
+                    //context.Call(new ReimbursementsDialog(), BackFromDialogPrompt);
                     break;
                 case "Appointments":
-                    context.Call(new AppointmentsDialog(), ResumeAfterOptionDialog);
+                    //context.Call(new AppointmentsDialog(), BackFromDialogPrompt);
                     break;
                 default:
                     break;
@@ -75,50 +94,33 @@ namespace ARHE_FAQ.Dialogs
 
         }
 
-        private async Task ResumeAfterOptionDialog(IDialogContext context, IAwaitable<object> result)
+        private async Task BackFromDialogPrompt(IDialogContext context, IAwaitable<object> result)
         {
-            try
+            //is more help needed?
+            var isMoreHelpNeeded = await result;
+
+            if ((bool)isMoreHelpNeeded)
             {
-                var message = await result;
+                await RestartPromptFAQAsync(context);
             }
-            catch (Exception ex)
+            else
             {
-                await context.PostAsync($"Failed with message: {ex.Message}");
+                await context.PostAsync("Thank you and have a great day");
             }
-            finally
-            {
-                context.Wait(this.BackFromDialogPromptAsync);
-            }
+            
         }
 
-        private async Task BackFromDialogPromptAsync(IDialogContext context, IAwaitable<object> result)
+        private async Task RestartPromptFAQAsync(IDialogContext context)
         {
-            var activity = await result as Activity;
-
-            PromptDialog.Confirm(
+            PromptDialog.Choice(
                 context: context,
-                resume: ResumeOrEndPromptAsync,
-                prompt: "Is there anything else I can help you with today",
-                retry: "I didn't understand. Please try again.");
-        }
-
-        private Task ResumeOrEndPromptAsync(IDialogContext context, IAwaitable<bool> result)
-        {
-            throw new NotImplementedException();
+                resume: ResumeAndPromptDecisionAsync,
+                options: new List<string>() { FAQStatus, FAQClaims, FAQAppointments, FAQReimbursements },
+                prompt: "Which of these areas do you need help with today?",
+                retry: "I didn't understand. Please try again."
+                );
         }
 
 
-
-        #region ENUMS for Choices
-        public enum FAQTypes
-        {
-            Status,
-            Claims,
-            Reimbursements,
-            Appointments
-        }
-        #endregion
-
-        
     }
 }
