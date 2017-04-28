@@ -1,0 +1,47 @@
+﻿[
+  {
+    "CustomerId": "1",
+    "IsProcessed": "true",
+    "PremiumAmount":  "100.00" 
+  },
+  {
+    "CustomerId": "2",
+    "IsProcessed": "false",
+    "PremiumAmount":  "200.00" 
+  },
+  {
+    "CustomerId": "3",
+    "IsProcessed": "true",
+    "PremiumAmount":  "300.00" 
+  },
+  {
+    "CustomerId": "4",
+    "IsProcessed": "false",
+    "PremiumAmount":  "400.00" 
+  },
+  {
+    "CustomerId": "5",
+    "IsProcessed": "true",
+    "PremiumAmount":  "500.00" 
+  },
+  {
+    "CustomerId": "6",
+    "IsProcessed": "false",
+    "PremiumAmount":  "600.00" 
+  },
+  {
+    "CustomerId": "7",
+    "IsProcessed": "true",
+    "PremiumAmount":  "700.00" 
+  },
+  {
+    "CustomerId": "8",
+    "IsProcessed": "false",
+    "PremiumAmount":  "800.00" 
+  },
+  {
+    "CustomerId": "9",
+    "IsProcessed": "true",
+    "PremiumAmount":  "900.00" 
+  }
+]

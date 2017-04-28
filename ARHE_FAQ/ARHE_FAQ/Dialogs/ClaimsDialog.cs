@@ -10,7 +10,13 @@ namespace ARHE_FAQ.Dialogs
     {
         public Task StartAsync(IDialogContext context)
         {
-            context.Wait(MessageReceivedAsync);
+            PromptDialog.Confirm(
+               context: context,
+               resume: ResumeAndPromptCustomerAsync,
+               prompt: "Ok. You asked about claims, are you a current customer?",
+               retry: "I didn't understand. Please try again.");
+
+            //context.Wait(MessageReceivedAsync);
 
             return Task.CompletedTask;
         }
@@ -19,11 +25,6 @@ namespace ARHE_FAQ.Dialogs
         {
             var activity = await result as IMessageActivity;
 
-            PromptDialog.Confirm(
-               context: context,
-               resume: ResumeAndPromptCustomerAsync,
-               prompt: "Ok. You asked about claims, are you a current customer?",
-               retry: "I didn't understand. Please try again.");
         }
 
         private async Task ResumeAndPromptCustomerAsync(IDialogContext context, IAwaitable<bool> result)
