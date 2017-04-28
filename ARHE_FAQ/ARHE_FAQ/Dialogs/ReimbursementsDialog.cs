@@ -36,6 +36,7 @@ namespace ARHE_FAQ.Dialogs
             else
             {
                 await context.PostAsync("We do not store reimbursement information for non-customers.");
+                context.Done(false);
             }
         }
 
